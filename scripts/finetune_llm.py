@@ -6,12 +6,12 @@ import pyrallis
 class FinetuningConfig:
     # Model configuration
     model_name: str = "gpt2"
-    block_size: int = 128
+    block_size: int = 512
     
     # Training configuration
     output_dir: str = "models/finetuned_model"
-    learning_rate: float = 5e-5
-    num_train_epochs: int = 5
+    learning_rate: float = 5e-4
+    num_train_epochs: int = 10
     per_device_train_batch_size: int = 4
     save_steps: int = 10_000
     save_total_limit: int = 2

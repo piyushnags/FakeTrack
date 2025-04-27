@@ -18,10 +18,10 @@ hr_ranges = {
 }
 
 # Function to compute ZIP code based on latitude and longitude
-def get_zip_code(lat, lon, num_bins=20):  # Increased bins for finer granularity
-    lat_min = 40.5  # Adjusted to cover wider range
-    lon_min = -74.2
-    bin_width = 0.01  # Smaller bins for better distinction
+def get_zip_code(lat, lon, num_bins=5):
+    lat_min = 40.2  # Same geographical area
+    lon_min = -74.5
+    bin_width = 0.2  # Coarser grid
     lat_idx = min(max(int((lat - lat_min) / bin_width), 0), num_bins - 1)
     lon_idx = min(max(int((lon - lon_min) / bin_width), 0), num_bins - 1)
     return f"ZIP_{lat_idx}_{lon_idx}"
