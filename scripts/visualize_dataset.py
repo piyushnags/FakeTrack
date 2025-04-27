@@ -84,7 +84,7 @@ stats_df.to_csv("benchmark/summary_statistics.csv", index=False)
 active_df = df[df["activity"].isin(["walking", "running"])]
 
 # Select 5 random users for visualization
-sample_users = np.random.choice(active_df["device_id"].unique(), size=5, replace=False)
+sample_users = np.random.choice(active_df["device_id"].unique(), size=25, replace=False)
 
 # Set up colormap for heart rate
 norm = mcolors.Normalize(vmin=df["heart_rate"].min(), vmax=df["heart_rate"].max())
