@@ -2,3 +2,4 @@ transformers[torch]
 torch
 faker
 pandas
+pyrallis

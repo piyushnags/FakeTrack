@@ -18,10 +18,10 @@ hr_ranges = {
 }
 
 # Function to compute ZIP code based on latitude and longitude
-def get_zip_code(lat, lon, num_bins=10):
-    lat_min = 40.6
-    lon_min = -74.1
-    bin_width = 0.02
+def get_zip_code(lat, lon, num_bins=20):  # Increased bins for finer granularity
+    lat_min = 40.5  # Adjusted to cover wider range
+    lon_min = -74.2
+    bin_width = 0.01  # Smaller bins for better distinction
     lat_idx = min(max(int((lat - lat_min) / bin_width), 0), num_bins - 1)
     lon_idx = min(max(int((lon - lon_min) / bin_width), 0), num_bins - 1)
     return f"ZIP_{lat_idx}_{lon_idx}"
@@ -29,13 +29,13 @@ def get_zip_code(lat, lon, num_bins=10):
 # Generate user metadata with sensitive information
 users = []
 for i in range(num_users):
-    device_id = f"{i:04d}"  # Unique device ID (e.g., "0001")
+    device_id = f"{i:04d}"
     name = faker.name()
     age = random.randint(18, 65)
     gender = random.choice(["Male", "Female", "Other"])
     activity = random.choice(activities)
-    center_lat = 40.7128 + random.uniform(-0.1, 0.1)
-    center_lon = -74.0060 + random.uniform(-0.1, 0.1)
+    center_lat = 40.7128 + random.uniform(-0.2, 0.2)  # Wider spread
+    center_lon = -74.0060 + random.uniform(-0.2, 0.2)
     zip_code = get_zip_code(center_lat, center_lon)
     users.append({
         "device_id": device_id,
@@ -54,8 +54,8 @@ train_users = users[:80]
 val_users = users[80:90]
 test_users = users[90:]
 
-# Save external database (sensitive info) to CSV
-external_db = pd.DataFrame(users)[["device_id", "name", "age", "gender", "zip_code"]]
+# Save external database
+external_db = pd.DataFrame(users)[["device_id", "name", "age", "gender", "zip_code", "center_lat", "center_lon"]]
 external_db.to_csv("data/external_database.csv", index=False)
 
 # Function to generate anonymized sensor data for a user
@@ -64,14 +64,12 @@ def generate_user_data(user):
     hr_min, hr_max = hr_ranges[activity]
     center_lat = user["center_lat"]
     center_lon = user["center_lon"]
-    # Define activity-specific path sizes
     if activity == "walking":
-        a, b = 0.005, 0.0025  # Smaller path
+        a, b = 0.005, 0.0025
     elif activity == "running":
-        a, b = 0.02, 0.01     # Larger path
+        a, b = 0.02, 0.01
     else:  # resting
-        a, b = 0.0001, 0.0001 # Minimal movement
-    # Random start time for diversity
+        a, b = 0.0001, 0.0001
     start_time = datetime(2023, 1, 1, 10, 0, 0) + timedelta(minutes=random.randint(0, 1440))
     data_points = []
     for t in range(points_per_user):
