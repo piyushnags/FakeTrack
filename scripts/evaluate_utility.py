@@ -1,7 +1,7 @@
 from transformers import pipeline
 
 # Load the fine-tuned model
-generator = pipeline("text-generation", model="models/finetuned_model", tokenizer="gpt2-large")
+generator = pipeline("text-generation", model="models/finetuned_model", tokenizer="gpt2")
 
 # Example prompt
 prompt = (
