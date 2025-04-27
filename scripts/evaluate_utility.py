@@ -1,22 +1,36 @@
 from transformers import pipeline
 
-# Load the fine-tuned model into a text generation pipeline
-generator = pipeline("text-generation", model="models/finetuned_model", tokenizer="gpt2")
+# Load the fine-tuned model
+generator = pipeline("text-generation", model="models/finetuned_model", tokenizer="gpt2-large")
 
-# Define a prompt to generate new sensor data
-prompt = "User: John Doe, Time: 10:00 AM, Location:"
+# Example prompt
+prompt = (
+    "Device ID: 0001, Activity: running\n"
+    "Sensor data:\n"
+    "Time: 10:00 AM, Location: 40.7128, -74.0060, HeartRate: 150 bpm\n"
+    "Time: 10:01 AM,"
+)
 
-# Generate a sequence
-print("Generating synthetic sensor data...")
-generated = generator(prompt, max_length=50, num_return_sequences=1, temperature=0.7)
+# Generate continuation
+print("Generating sensor data...")
+generated = generator(prompt, max_length=200, num_return_sequences=1, temperature=0.7)
 generated_text = generated[0]["generated_text"]
 
-# Output the generated sequence
-print("Generated sequence:")
+print("Generated Output:")
 print(generated_text)
 
-# Basic validation
+# Utility checks
 if "Location:" in generated_text and "HeartRate:" in generated_text:
-    print("Utility check: Generated data contains expected fields (Location, HeartRate).")
+    print("Utility Check: Contains expected fields (Location, HeartRate).")
+    # Extract heart rate for range check
+    try:
+        hr_str = generated_text.split("HeartRate: ")[1].split()[0]
+        hr = int(hr_str)
+        if 60 <= hr <= 200:
+            print("Utility Check: Heart rate within plausible range (60-200 bpm).")
+        else:
+            print("Utility Check: Heart rate out of plausible range.")
+    except:
+        print("Utility Check: Could not parse heart rate.")
 else:
-    print("Utility check: Generated data may be incomplete.")
+    print("Utility Check: Missing expected fields.")

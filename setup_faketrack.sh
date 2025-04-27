@@ -14,7 +14,7 @@ mkdir -p scripts
 # Create requirements.txt for dependencies
 echo "Creating requirements.txt..."
 cat <<EOL > requirements.txt
-transformers
+transformers[torch]
 torch
 faker
 pandas
