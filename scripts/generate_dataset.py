@@ -34,8 +34,8 @@ for i in range(num_users):
     age = random.randint(18, 65)
     gender = random.choice(["Male", "Female", "Other"])
     activity = random.choice(activities)
-    center_lat = 40.7128 + random.uniform(-0.2, 0.2)  # Wider spread
-    center_lon = -74.0060 + random.uniform(-0.2, 0.2)
+    center_lat = 40.7128 + random.uniform(-1.0, 1.0)
+    center_lon = -74.0060 + random.uniform(-1.0, 1.0)
     zip_code = get_zip_code(center_lat, center_lon)
     users.append({
         "device_id": device_id,
@@ -65,11 +65,11 @@ def generate_user_data(user):
     center_lat = user["center_lat"]
     center_lon = user["center_lon"]
     if activity == "walking":
-        a, b = 0.005, 0.0025
+        a, b = 0.01, 0.005  # Increased path size
     elif activity == "running":
-        a, b = 0.02, 0.01
+        a, b = 0.04, 0.02
     else:  # resting
-        a, b = 0.0001, 0.0001
+        a, b = 0.0002, 0.0002
     start_time = datetime(2023, 1, 1, 10, 0, 0) + timedelta(minutes=random.randint(0, 1440))
     data_points = []
     for t in range(points_per_user):
